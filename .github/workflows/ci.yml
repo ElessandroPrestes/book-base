@@ -1,0 +1,55 @@
+name: Laravel CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: book_db
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+    - name: ⬇️ Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🧰 Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, bcmath, pdo_mysql, xdebug
+        coverage: xdebug
+
+    - name: 📦 Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: ⚙️ Copy .env.testing
+      run: cp .env.testing .env
+
+    - name: 🔑 Generate app key
+      run: php artisan key:generate
+
+    - name: 🧪 Run tests with coverage
+      run: php artisan test --coverage --min=80
+
+    - name: 📊 Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: coverage.xml
+        flags: unittests
+        name: Laravel Coverage

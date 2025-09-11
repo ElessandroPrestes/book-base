@@ -71,10 +71,10 @@ Essas instruções ajudam você a rodar o projeto localmente para desenvolviment
 
 ```bash
 # 1. Clone o projeto
-git clone https://gitlab.com/elessandrodev/antenna-tracker
+git clone https://github.com/ElessandroPrestes/book-base.git
 
 # 2. Acesse o diretório
-cd antenna-tracker
+cd book-base
 
 # 3. (opcional) Apague o histórico Git
 rm -rf .git
@@ -106,6 +106,9 @@ php artisan db:seed
 ## 🧪 Testes Automatizados
 
 ```bash
+# Acesse o container
+  docker compose exec book_app1 bash
+
 # Dentro do container book_app1
   composer test
 
@@ -115,19 +118,11 @@ php artisan db:seed
 
 ## 📈 Relatório de Cobertura
 
-[![Coverage](https://gitlab.com/elessandrodev/antenna-tracker/badges/main/coverage.svg)](https://gitlab.com/elessandrodev/antenna-tracker/-/pipelines)
+[![CI](https://github.com/ElessandroPrestes/book-base/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ElessandroPrestes/book-base/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/ElessandroPrestes/book-base/branch/main/graph/badge.svg)](https://codecov.io/gh/ElessandroPrestes/book-base)
 
 
-✅ Para visualizar o relatório completo de cobertura (HTML):
-
-1. Acesse os [Jobs do pipeline](https://gitlab.com/elessandrodev/antenna-tracker-frontend/-/jobs).
-2. Encontre o primeiro job chamado `run_tests` na lista (o mais recente, de cima para baixo) e clique nele.
-3. Na página do job, vá até a seção **Job Artifacts** e clique em **Browse**.
-4. Abra a pasta `coverage/` e clique no arquivo `index.html`.
-5. Você será redirecionado para uma página que mostra um link público.
-6. Clique nesse link para abrir o relatório visual completo em uma nova aba.
-
-📈 Com esse relatório, você pode inspecionar a cobertura de testes por linha, função e arquivo — focado especialmente em `src/modules/antennas`.
+📈 Com esse relatório, você pode inspecionar a cobertura de testes por linha, função e arquivo — focado especialmente em `src/modules/books`.
 
 ---
 
@@ -135,16 +130,7 @@ php artisan db:seed
 > 
 > ```bash
 > docker compose exec book_app1 bash
-> ```
-
----
-
-## 🔄 Integração Contínua (CI/CD)
-
-- O pipeline do GitLab executa build, testes e deploy com Docker.
-- Use `.env.ci` como base de variáveis para ambiente de CI.
-- Commits na branch `main` geram imagens com a tag `:latest`.
-- Commits nas branches `staging` ou `dev` geram imagens com a tag `:staging`.
+> 
 
 ---
 
