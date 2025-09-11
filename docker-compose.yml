@@ -1,0 +1,131 @@
+services:
+  book_app1:
+    image: elessandrodev/php-core:v1.0.1
+    container_name: book_app1
+    working_dir: /var/www/
+    restart: unless-stopped
+    command: php-fpm
+    volumes:
+      - ./:/var/www
+    expose:
+      - 9000
+    depends_on:
+      book_mysql:
+        condition: service_healthy
+      book_redis:
+        condition: service_healthy
+    networks:
+      - api_network
+
+  book_app2:
+    image: elessandrodev/php-core:v1.0.1
+    container_name: book_app2
+    working_dir: /var/www/
+    restart: unless-stopped
+    command: php-fpm
+    volumes:
+      - ./:/var/www
+    expose:
+      - 9000
+    depends_on:
+      book_mysql:
+        condition: service_healthy
+      book_redis:
+        condition: service_healthy
+    networks:
+      - api_network
+
+  book_horizon:
+    image: elessandrodev/php-core:v1.0.1
+    container_name: book_horizon
+    working_dir: /var/www/
+    restart: unless-stopped
+    command: >
+      sh -c "composer install && php artisan horizon"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      book_redis:
+        condition: service_healthy
+    networks:
+      - api_network
+
+  book_scheduler:
+    image: elessandrodev/php-core:v1.0.1
+    container_name: book_scheduler
+    working_dir: /var/www/
+    restart: unless-stopped
+    command: >
+      sh -c "composer install && while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      book_mysql:
+        condition: service_healthy
+      book_redis:
+        condition: service_healthy
+    networks:
+      - api_network
+
+  book_nginx:
+    image: nginx:1.25-alpine
+    container_name: book_nginx
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - book_app1
+      - book_app2
+    networks:
+      - api_network
+
+  book_mysql:
+    image: mysql:8.1
+    container_name: book_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: developer
+      MYSQL_DATABASE: book_db
+    volumes:
+      - ./.docker/mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - api_network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -pdeveloper || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  book_redis:
+    image: redis:7.2.4-alpine
+    container_name: book_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - api_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  book_adminer:
+    image: adminer:4.8.1
+    container_name: book_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - book_mysql
+    networks:
+      - api_network
+
+networks:
+  api_network:
+    driver: bridge
