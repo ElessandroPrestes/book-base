@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class);
 
-describe('Modelo User', function () {
+describe('Model User', function () {
 
     it('possui os campos preenchíveis "name", "email" e "password"', function () {
         $usuario = new User([
