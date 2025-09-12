@@ -44,7 +44,7 @@ jobs:
       run: php artisan key:generate
 
     - name: 🧪 Run tests with coverage
-      run: vendor/bin/phpunit --coverage-clover=coverage.xml
+      run: vendor/bin/pest --coverage-clover=coverage.xml
 
     - name: ✅ Verify coverage file
       run: ls -lh coverage.xml
