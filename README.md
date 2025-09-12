@@ -122,7 +122,7 @@ php artisan db:seed
 [![Coverage](https://codecov.io/gh/ElessandroPrestes/book-base/branch/main/graph/badge.svg)](https://codecov.io/gh/ElessandroPrestes/book-base)
 
 
-📈 Com esse relatório, você pode inspecionar a cobertura de testes por linha, função e arquivo — focado especialmente em `src/modules/books`.
+📈 Com esse relatório, você pode inspecionar a cobertura de testes por linha, função e arquivo — focado especialmente em `app/`.
 
 ---
 

@@ -61,7 +61,7 @@
            "./vendor/bin/pest"
         ],
         "test:coverage": [
-            "./vendor/bin/pest --coverage"
+            "./vendor/bin/pest --coverage --min=80"
         ]
     },
     "extra": {

@@ -12,7 +12,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:8.1
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: book_db
@@ -44,7 +44,10 @@ jobs:
       run: php artisan key:generate
 
     - name: 🧪 Run tests with coverage
-      run: php artisan test --coverage --min=80
+      run: vendor/bin/phpunit --coverage-clover=coverage.xml
+
+    - name: ✅ Verify coverage file
+      run: ls -lh coverage.xml
 
     - name: 📊 Upload coverage to Codecov
       uses: codecov/codecov-action@v4
