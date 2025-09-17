@@ -48,18 +48,19 @@ jobs:
       - name: 🧪 Run tests with coverage
         run: vendor/bin/pest --coverage-clover=coverage.xml
 
-      - name: ✨ Analyze with SonarQube
-        uses: SonarSource/sonarqube-scan-action@master
+      - name: ✨ Analyze with SonarCloud
+        uses: SonarSource/sonarqube-scan-action@1a6d90e
+
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=book-base
+            -Dsonar.projectKey=ElessandroPrestes_book-base
+            -Dsonar.organization=elessandro-dev
             -Dsonar.sources=.
+            -Dsonar.exclusions=vendor/**,tests/**,node_modules/**
             -Dsonar.php.coverage.reportPaths=coverage.xml
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
       - name: 📊 Upload coverage to Codecov
         uses: codecov/codecov-action@v4
