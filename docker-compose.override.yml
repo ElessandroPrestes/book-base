@@ -1,0 +1,21 @@
+services:
+  book_app1:
+    volumes:
+      - ./:/var/www
+
+  book_app2:
+    volumes:
+      - ./:/var/www
+
+  book_horizon:
+    volumes:
+      - ./:/var/www
+
+  book_scheduler:
+    volumes:
+      - ./:/var/www
+
+  book_nginx:
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d

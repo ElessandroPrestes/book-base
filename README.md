@@ -32,6 +32,11 @@
 ### 🧾 Documentação
 - Swagger UI para testes e visualização dos endpoints
 
+### 📊 Qualidade de Código
+- Análise contínua com SonarQube
+- Métricas de cobertura, duplicação e vulnerabilidades
+
+
 ---
 
 ## 🧠 Arquitetura
@@ -175,6 +180,7 @@ php artisan db:seed
 | Laravel Telescope   | http://localhost:8081/telescope         | Análise e monitoramento da aplicação                                                                            |
 | Laravel Horizon     | http://localhost:8081/horizon           | Painel de monitoramento e controle de filas com Redis                                                           |
 | Adminer (MySQL GUI) | http://localhost:8080                   | <pre>Sistema: `MySQL`<br>Servidor: `book_mysql`<br>Usuário: `root`  <br>Senha: `developer`  <br>Base de dados: `book_db` </pre>|
+| SonarQube           | http://localhost:9000                   | <pre>Usuário: `admin`<br>Senha: `Developer@10`</pre>                                                            |
 
 ---
 
@@ -191,6 +197,7 @@ php artisan db:seed
 - Laravel Horizon
 - Laravel Telescope
 - L5-Swagger
+- SonarQube
 
 ---
 

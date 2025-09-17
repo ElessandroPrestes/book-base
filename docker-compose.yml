@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     command: php-fpm
     volumes:
-      - ./:/var/www
+      - app_src:/var/www
     expose:
       - 9000
     depends_on:
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
     command: php-fpm
     volumes:
-      - ./:/var/www
+      - app_src:/var/www
     expose:
       - 9000
     depends_on:
@@ -43,7 +43,7 @@ services:
     command: >
       sh -c "composer install && php artisan horizon"
     volumes:
-      - ./:/var/www
+      - app_src:/var/www
     depends_on:
       book_redis:
         condition: service_healthy
@@ -58,7 +58,7 @@ services:
     command: >
       sh -c "composer install && while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
     volumes:
-      - ./:/var/www
+      - app_src:/var/www
     depends_on:
       book_mysql:
         condition: service_healthy
@@ -74,8 +74,8 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./:/var/www
-      - ./docker/nginx:/etc/nginx/conf.d
+      - app_src:/var/www
+      - nginx_conf:/etc/nginx/conf.d
     depends_on:
       - book_app1
       - book_app2
@@ -87,19 +87,20 @@ services:
     container_name: book_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: developer
-      MYSQL_DATABASE: book_db
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
     volumes:
       - ./.docker/mysql_data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
     networks:
       - api_network
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -pdeveloper || exit 1"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p${DB_ROOT_PASSWORD} || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 10
+
 
   book_redis:
     image: redis:7.2.4-alpine
@@ -125,7 +126,33 @@ services:
       - book_mysql
     networks:
       - api_network
+  
+  book_sonarqube:
+    image: sonarqube:community
+    container_name: book_sonarqube
+    restart: unless-stopped
+    ports:
+      - "9000:9000" 
+      - "9092:9092"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true 
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    networks:
+      - api_network
 
 networks:
   api_network:
     driver: bridge
+
+volumes:
+  app_src:
+  nginx_conf:
+  mysql_data:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
