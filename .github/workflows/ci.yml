@@ -49,7 +49,7 @@ jobs:
         run: vendor/bin/pest --coverage-clover=coverage.xml
 
       - name: ✨ Analyze with SonarCloud
-        uses: SonarSource/sonarqube-scan-action@1a6d90e
+        uses: SonarSource/sonarqube-scan-action@1a6d90ebcb0e6a6b1d87e37ba693fe453195ae25
 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
