@@ -55,12 +55,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
-          args: >
-            -Dsonar.projectKey=ElessandroPrestes_book-base
-            -Dsonar.organization=elessandro-dev
-            -Dsonar.sources=.
-            -Dsonar.exclusions=vendor/**,tests/**,node_modules/**
-            -Dsonar.php.coverage.reportPaths=coverage.xml
+          args: ''
+           
 
       - name: 📊 Upload coverage to Codecov
         uses: codecov/codecov-action@v4
